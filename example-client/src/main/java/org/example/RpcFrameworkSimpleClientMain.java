@@ -2,7 +2,7 @@ package org.example;
 
 import org.example.api.Hello;
 import org.example.api.HelloService;
-import org.example.simple.RpcClientProxy;
+import org.example.simple.remoting.socket.RpcClientProxy;
 
 public class RpcFrameworkSimpleClientMain {
     public static void main(String[] args) {

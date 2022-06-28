@@ -1,4 +1,4 @@
-package org.example.simple;
+package org.example.simple.remoting.socket;
 
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
