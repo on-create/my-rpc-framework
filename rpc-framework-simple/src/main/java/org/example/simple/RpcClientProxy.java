@@ -1,6 +1,8 @@
 package org.example.simple;
 
 import org.example.common.dto.RpcRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -8,6 +10,7 @@ import java.lang.reflect.Proxy;
 
 public class RpcClientProxy implements InvocationHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
     private final String host;
     private final int port;
 
@@ -27,7 +30,7 @@ public class RpcClientProxy implements InvocationHandler {
         return (T) Proxy.newProxyInstance(
                 clazz.getClassLoader(), // 代理类的类加载器
                 new Class<?>[]{clazz},  // 代理类要实现的接口列表
-                RpcClientProxy.this  // 代理对象对应的自定义 InvocationHandler
+                this  // 代理对象对应的自定义 InvocationHandler
         );
     }
 
@@ -38,6 +41,7 @@ public class RpcClientProxy implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        logger.info("Call invoke method and invoked method: {}", method.getName());
         // Builder模式创建对象
         RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())
                 .parameters(args)
