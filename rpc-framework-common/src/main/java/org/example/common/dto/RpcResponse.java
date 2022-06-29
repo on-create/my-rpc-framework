@@ -1,11 +1,16 @@
 package org.example.common.dto;
 
-import lombok.Data;
+import lombok.*;
 import org.example.common.enumeration.RpcResponseCode;
 
 import java.io.Serializable;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
 public class RpcResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 175745410605631233L;

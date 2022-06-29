@@ -1,9 +1,10 @@
-package org.example.simple.remoting.socket;
+package org.example.simple.transport.socket;
 
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
+import org.example.simple.registry.DefaultServiceRegistry;
 import org.example.simple.registry.ServiceRegistry;
-import org.example.simple.remoting.RpcRequestHandler;
+import org.example.simple.transport.RpcRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,17 +13,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class RpcRequestHandlerRunnable implements Runnable {
+public class SocketRpcRequestHandlerRunnable implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(RpcRequestHandlerRunnable.class);
+    private static final Logger logger = LoggerFactory.getLogger(SocketRpcRequestHandlerRunnable.class);
     private final Socket socket;
-    private final RpcRequestHandler requestHandler;
-    private final ServiceRegistry serviceRegistry;
+    private static final RpcRequestHandler requestHandler;
+    private static final ServiceRegistry serviceRegistry;
 
-    public RpcRequestHandlerRunnable(Socket socket, RpcRequestHandler requestHandler, ServiceRegistry serviceRegistry) {
+    static {
+        requestHandler = new RpcRequestHandler();
+        serviceRegistry = new DefaultServiceRegistry();
+    }
+    public SocketRpcRequestHandlerRunnable(Socket socket) {
         this.socket = socket;
-        this.requestHandler = requestHandler;
-        this.serviceRegistry = serviceRegistry;
     }
 
     @Override

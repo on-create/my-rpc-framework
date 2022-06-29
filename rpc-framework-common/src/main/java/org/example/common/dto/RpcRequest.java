@@ -1,12 +1,14 @@
 package org.example.common.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@ToString
 public class RpcRequest implements Serializable {
 
     private static final long serialVersionUID = 1905122041950251207L;

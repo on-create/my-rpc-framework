@@ -1,8 +1,7 @@
 package org.example.server;
 
 import org.example.server.Impl.HelloServiceImpl;
-import org.example.server.Impl.HelloServiceImpl2;
-import org.example.simple.RpcServer;
+import org.example.simple.transport.socket.SocketRpcServer;
 import org.example.simple.registry.DefaultServiceRegistry;
 
 public class SocketServerMain {
@@ -23,7 +22,7 @@ public class SocketServerMain {
         DefaultServiceRegistry defaultServiceRegistry = new DefaultServiceRegistry();
         // 手动注册
         defaultServiceRegistry.register(helloService);
-        RpcServer rpcServer = new RpcServer(defaultServiceRegistry);
-        rpcServer.start(9999);
+        SocketRpcServer socketRpcServer = new SocketRpcServer();
+        socketRpcServer.start(9999);
     }
 }

@@ -1,4 +1,4 @@
-package org.example.simple.remoting;
+package org.example.simple.transport;
 
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;

@@ -1,10 +1,12 @@
-package org.example.simple.remoting.socket;
+package org.example.simple.transport.socket;
 
+import lombok.AllArgsConstructor;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;
+import org.example.simple.transport.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,11 +15,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class RpcClient {
+@AllArgsConstructor
+public class SocketRpcClient implements RpcClient {
 
-    public static final Logger logger = LoggerFactory.getLogger(RpcClient.class);
+    public static final Logger logger = LoggerFactory.getLogger(SocketRpcClient.class);
+    private final String host;
+    private final int port;
 
-    public Object sendRpcRequest(RpcRequest rpcRequest, String host, int port) {
+    @Override
+    public Object sendRpcRequest(RpcRequest rpcRequest) {
         // 创建Socket对象并且指定服务器的地址和端口号
         try (Socket socket = new Socket(host, port)) {
             // 对象的序列化流，将指定对象写入ObjectOutputStream
