@@ -15,6 +15,10 @@ import org.example.simple.transport.netty.codec.NettyKryoEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 客户端
+ * 发送消息到服务端，并接收服务端返回的方法执行结果
+ */
 public class NettyRpcClient implements RpcClient {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyRpcClient.class);
