@@ -14,6 +14,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * Kryo序列化类，Kryo序列化效率高，但只兼容 java
+ */
 public class KryoSerializer implements Serializer {
 
     private static final Logger logger = LoggerFactory.getLogger(KryoSerializer.class);
@@ -21,11 +24,11 @@ public class KryoSerializer implements Serializer {
     /**
      * ThreadLocal.withInitial: 当threadLocal中不存在值时，调用get()，会返回使用初始方法生成的对象
      */
-    private static final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
+    private final ThreadLocal<Kryo> kryoThreadLocal = ThreadLocal.withInitial(() -> {
         Kryo kryo = new Kryo();
         kryo.register(RpcRequest.class);
         kryo.register(RpcResponse.class);
-        // 默认值为true，是否关闭注册行为，关闭之后可能存在序列化问题，一般推荐设置为 true
+        // 默认值为true，是否关闭注册行为，关闭之后可能存在序列化问题（序列号问题），一般推荐设置为 true
         kryo.setRegistrationRequired(false);
         // 默认值为false，是否关闭循环引用，可以提高性能，但是一般不推荐设置为 true
         kryo.setReferences(true);

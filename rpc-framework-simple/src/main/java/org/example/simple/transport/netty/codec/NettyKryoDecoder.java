@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty;
+package org.example.simple.transport.netty.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * 自定义解码器
+ * 处理“入站”消息，将消息格式转换为我们需要的业务对象
+ */
 @AllArgsConstructor
 public class NettyKryoDecoder extends ByteToMessageDecoder {
 
@@ -23,6 +27,13 @@ public class NettyKryoDecoder extends ByteToMessageDecoder {
      */
     private static final int BODY_LENGTH = 4;
 
+    /**
+     * 解码
+     * @param channelHandlerContext
+     * @param byteBuf
+     * @param list
+     * @throws Exception
+     */
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         // 1.byteBuf中写入的消息长度所占的字节数已经是4了，所以 byteBuf 的可读字节必须大于4

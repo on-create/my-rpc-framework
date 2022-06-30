@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty;
+package org.example.simple.transport.netty.server;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -13,6 +13,9 @@ import org.example.simple.transport.RpcRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 自定义服务端的 ChannelHandler 来处理客户端发过来的数据
+ */
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);

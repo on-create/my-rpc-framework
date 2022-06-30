@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty;
+package org.example.simple.transport.netty.codec;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -6,6 +6,10 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import lombok.AllArgsConstructor;
 import org.example.simple.serialize.Serializer;
 
+/**
+ * 自定义解码器
+ * 处理“出站”消息，将消息格式转换为字节数组然后写入到字节数据的容器 ByteBuf 对象中
+ */
 @AllArgsConstructor
 public class NettyKryoEncoder extends MessageToByteEncoder<Object> {
 

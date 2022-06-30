@@ -1,5 +1,8 @@
 package org.example.simple.serialize;
 
+/**
+ * 序列化接口，所有序列化类都要实现这个接口
+ */
 public interface Serializer {
 
     /**

@@ -2,7 +2,7 @@ package org.example.server;
 
 import org.example.server.Impl.HelloServiceImpl;
 import org.example.simple.registry.DefaultServiceRegistry;
-import org.example.simple.transport.netty.NettyRpcServer;
+import org.example.simple.transport.netty.server.NettyRpcServer;
 
 public class NettyServerMain {
     public static void main(String[] args) {

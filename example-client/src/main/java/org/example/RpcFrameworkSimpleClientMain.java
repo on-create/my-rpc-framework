@@ -4,7 +4,7 @@ import org.example.api.Hello;
 import org.example.api.HelloService;
 import org.example.simple.transport.RpcClientProxy;
 import org.example.simple.transport.RpcClient;
-import org.example.simple.transport.netty.NettyRpcClient;
+import org.example.simple.transport.netty.client.NettyRpcClient;
 import org.example.simple.transport.socket.SocketRpcClient;
 
 public class RpcFrameworkSimpleClientMain {

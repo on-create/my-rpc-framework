@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty;
+package org.example.simple.transport.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -13,6 +13,8 @@ import io.netty.handler.logging.LoggingHandler;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.simple.serialize.kryo.KryoSerializer;
+import org.example.simple.transport.netty.codec.NettyKryoDecoder;
+import org.example.simple.transport.netty.codec.NettyKryoEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
