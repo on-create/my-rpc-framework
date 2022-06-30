@@ -68,7 +68,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 if (result instanceof RpcResponse) {
                     f = ctx.writeAndFlush(result);
                 } else {
-                    f =ctx.writeAndFlush(RpcResponse.success(result));
+                    f =ctx.writeAndFlush(RpcResponse.success(result, rpcRequest.getRequestId()));
                 }
                 f.addListener(ChannelFutureListener.CLOSE);
             } finally {

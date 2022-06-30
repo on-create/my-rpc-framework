@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
+import org.example.common.utils.checker.RpcMessageChecker;
 import org.example.simple.serialize.kryo.KryoSerializer;
 import org.example.simple.transport.RpcClient;
 import org.example.simple.transport.netty.codec.NettyKryoDecoder;
@@ -72,8 +73,10 @@ public class NettyRpcClient implements RpcClient {
                     }
                 });
                 channel.closeFuture().sync();
-                AttributeKey<RpcResponse<?>> key = AttributeKey.valueOf("rpcResponse");
+                AttributeKey<RpcResponse<?>> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 RpcResponse<?> rpcResponse = channel.attr(key).get();
+                // 校验 RpcResponse 和 RpcRequest
+                RpcMessageChecker.check(rpcRequest, rpcResponse);
                 return rpcResponse.getData();
             }
         } catch (InterruptedException e) {

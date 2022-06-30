@@ -46,7 +46,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
             if (result instanceof RpcResponse) {
                 objectOutputStream.writeObject(result);
             } else {
-                objectOutputStream.writeObject(RpcResponse.success(result));
+                objectOutputStream.writeObject(RpcResponse.success(result, rpcRequest.getRequestId()));
             }
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {

@@ -6,6 +6,7 @@ import org.example.common.dto.RpcResponse;
 import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;
+import org.example.common.utils.checker.RpcMessageChecker;
 import org.example.simple.transport.RpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,17 +33,10 @@ public class SocketRpcClient implements RpcClient {
             objectOutputStream.writeObject(rpcRequest);
             // 通过输入流获取服务器响应的信息，接收数据前处于阻塞状态
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            RpcResponse rpcResponse = (RpcResponse) objectInputStream.readObject();
+            RpcResponse<?> rpcResponse = (RpcResponse<?>) objectInputStream.readObject();
 
-            if (rpcResponse == null) {
-                logger.error("调用服务失败,serviceName:{}", rpcRequest.getInterfaceName());
-                throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, "interfaceName:" + rpcRequest.getInterfaceName());
-            }
-
-            if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCode.SUCCESS.getCode())) {
-                logger.error("调用服务失败,serviceName:{},RpcResponse:{}", rpcRequest.getInterfaceName(), rpcResponse);
-                throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, "interfaceName:" + rpcRequest.getInterfaceName());
-            }
+            // 校验 RpcResponse 和 RpcRequest
+            RpcMessageChecker.check(rpcRequest, rpcResponse);
             return rpcResponse.getData();
         } catch (IOException | ClassNotFoundException e) {
             logger.error("occur exception:", e);
