@@ -59,7 +59,7 @@ public class NettyRpcServer {
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            logger.error("occur exception when start server:", e);
+            logger.error("occur org.example.simple.transport.netty.server.NettyRpcServer.exception when start server:", e);
         }
     }
 }

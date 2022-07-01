@@ -50,7 +50,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
             }
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur exception:", e);
+            logger.error("occur org.example.simple.transport.socket.SocketRpcRequestHandlerRunnable.exception:", e);
         }
     }
 }

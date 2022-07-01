@@ -46,7 +46,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("client catch exception: ", cause);
+        logger.error("client catch org.example.simple.transport.netty.client.NettyClientHandler.exception: ", cause);
         cause.printStackTrace();
         ctx.close();
     }
