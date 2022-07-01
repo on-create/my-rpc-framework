@@ -3,11 +3,9 @@ package org.example.simple.transport.socket;
 import lombok.AllArgsConstructor;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
-import org.example.common.enumeration.RpcErrorMessageEnum;
-import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;
 import org.example.common.utils.checker.RpcMessageChecker;
-import org.example.simple.transport.RpcClient;
+import org.example.simple.transport.ClientTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +15,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 @AllArgsConstructor
-public class SocketRpcClient implements RpcClient {
+public class SocketRpcClient implements ClientTransport {
 
     public static final Logger logger = LoggerFactory.getLogger(SocketRpcClient.class);
     private final String host;
@@ -39,9 +37,8 @@ public class SocketRpcClient implements RpcClient {
             RpcMessageChecker.check(rpcRequest, rpcResponse);
             return rpcResponse.getData();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur exception:", e);
+            logger.error("occur exception when send sendRpcRequest:");
+            throw new RpcException("调用服务失败:", e);
         }
-
-        return null;
     }
 }

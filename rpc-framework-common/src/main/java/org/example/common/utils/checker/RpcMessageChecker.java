@@ -19,7 +19,7 @@ public class RpcMessageChecker {
 
     public static void check(RpcRequest rpcRequest, RpcResponse<?> rpcResponse) {
         if (rpcResponse == null) {
-            logger.error("调用服务失败,serviceName:{}", rpcRequest.getInterfaceName());
+            logger.error("调用服务失败,rpcResponse 为null，serviceName:{}", rpcRequest.getInterfaceName());
             throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }
 
@@ -28,7 +28,7 @@ public class RpcMessageChecker {
         }
 
         if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCode.SUCCESS.getCode())) {
-            logger.error("调用服务失败,serviceName:{},RpcResponse:{}", rpcRequest.getInterfaceName(), rpcResponse);
+            logger.error("调用服务失败,rpcRequest 和 RpcResponse对应不上，serviceName:{},RpcResponse:{}", rpcRequest.getInterfaceName(), rpcResponse);
             throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }
     }

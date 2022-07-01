@@ -18,10 +18,10 @@ public class RpcClientProxy implements InvocationHandler {
     private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
 
     // 用于发送请求给服务端，对应socket 和 netty两种实现方式
-    private final RpcClient rpcClient;
+    private final ClientTransport clientTransport;
 
-    public RpcClientProxy(RpcClient rpcClient) {
-        this.rpcClient = rpcClient;
+    public RpcClientProxy(ClientTransport clientTransport) {
+        this.clientTransport = clientTransport;
     }
 
     @SuppressWarnings("unchecked")
@@ -55,6 +55,6 @@ public class RpcClientProxy implements InvocationHandler {
                 .requestId(UUID.randomUUID().toString())
                 .build();
 
-        return rpcClient.sendRpcRequest(rpcRequest);
+        return clientTransport.sendRpcRequest(rpcRequest);
     }
 }
