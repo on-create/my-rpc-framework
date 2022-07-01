@@ -9,9 +9,15 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.UUID;
 
+/**
+ * 动态代理类
+ * 当动态代理对象调用一个方法的时候，实际调用的是下面的 invoke 方法
+ */
 public class RpcClientProxy implements InvocationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
+
+    // 用于发送请求给服务端，对应socket 和 netty两种实现方式
     private final RpcClient rpcClient;
 
     public RpcClientProxy(RpcClient rpcClient) {
