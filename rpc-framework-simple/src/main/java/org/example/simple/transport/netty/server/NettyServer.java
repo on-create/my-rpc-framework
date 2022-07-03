@@ -12,11 +12,17 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
+import org.example.simple.provider.ServiceProvider;
+import org.example.simple.provider.impl.ServiceProviderImpl;
+import org.example.simple.registry.ServiceRegistry;
+import org.example.simple.registry.ZkServiceRegistry;
 import org.example.simple.serialize.kryo.KryoSerializer;
 import org.example.simple.transport.netty.codec.NettyKryoDecoder;
 import org.example.simple.transport.netty.codec.NettyKryoEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.net.InetSocketAddress;
 
 /**
  * 服务端
@@ -25,15 +31,27 @@ import org.slf4j.LoggerFactory;
 public class NettyServer {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
+    private final String host;
     private final int port;
     private final KryoSerializer kryoSerializer;
+    private final ServiceRegistry serviceRegistry;
+    private final ServiceProvider serviceProvider;
 
-    public NettyServer(int port) {
+    public NettyServer(String host, int port) {
+        this.host = host;
         this.port = port;
         this.kryoSerializer = new KryoSerializer();
+        this.serviceRegistry = new ZkServiceRegistry();
+        this.serviceProvider = new ServiceProviderImpl();
     }
 
-    public void run() {
+    public <T> void publishService(Object service, Class<T> serviceClass) {
+        serviceProvider.addServiceProvider(service);
+        serviceRegistry.registerService(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
+        start();
+    }
+
+    public void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -57,7 +75,7 @@ public class NettyServer {
                     .option(ChannelOption.SO_BACKLOG, 128);
 
             // 绑定端口，同步等待绑定成功
-            ChannelFuture f = b.bind(port).sync();
+            ChannelFuture f = b.bind(host, port).sync();
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {

@@ -1,22 +1,18 @@
 package org.example.simple.provider;
 
-import org.example.simple.config.RpcServiceConfig;
-
+/**
+ * 保存和提供服务实例对象。
+ * 服务端使用
+ */
 public interface ServiceProvider {
 
     /**
-     * @param rpcServiceConfig rpc服务相关属性
+     * 保存服务提供者
      */
-    void addService(RpcServiceConfig rpcServiceConfig);
+    <T> void addServiceProvider(T service);
 
     /**
-     * @param rpcServiceName rpc service name
-     * @return service Object
+     * 获得服务提供者
      */
-    Object getService(String rpcServiceName);
-
-    /**
-     * @param rpcServiceConfig rpc service related attributes
-     */
-    void publishService(RpcServiceConfig rpcServiceConfig);
+    Object getServiceProvider(String serviceName);
 }

@@ -8,7 +8,7 @@ import io.netty.util.ReferenceCountUtil;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
-import org.example.simple.transport.RpcRequestHandler;
+import org.example.simple.handler.RpcRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

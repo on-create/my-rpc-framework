@@ -1,6 +1,7 @@
-package org.example.simple.transport;
+package org.example.simple.proxy;
 
 import org.example.common.dto.RpcRequest;
+import org.example.simple.transport.ClientTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

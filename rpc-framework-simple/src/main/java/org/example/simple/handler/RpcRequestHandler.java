@@ -1,10 +1,10 @@
-package org.example.simple.transport;
+package org.example.simple.handler;
 
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.enumeration.RpcResponseCode;
-import org.example.simple.registry.DefaultServiceRegistry;
-import org.example.simple.registry.ServiceRegistry;
+import org.example.simple.provider.ServiceProvider;
+import org.example.simple.provider.impl.ServiceProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +14,10 @@ import java.lang.reflect.Method;
 public class RpcRequestHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RpcRequestHandler.class);
-    private static final ServiceRegistry serviceRegistry;
+    private static final ServiceProvider SERVICE_PROVIDER;
 
     static {
-        serviceRegistry = new DefaultServiceRegistry();
+        SERVICE_PROVIDER = new ServiceProviderImpl();
     }
 
     /**
@@ -28,12 +28,12 @@ public class RpcRequestHandler {
     public Object handle(RpcRequest rpcRequest) {
         Object result = null;
         // 通过注册中心获取到目标类
-        Object service = serviceRegistry.getService(rpcRequest.getInterfaceName());
+        Object service = SERVICE_PROVIDER.getServiceProvider(rpcRequest.getInterfaceName());
         try {
             result = invokeTargetMethod(rpcRequest, service);
             logger.info("service:{} successful invoke method:{}", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            logger.error("occur org.example.simple.transport.RpcRequestHandler.exception", e);
+            logger.error("occur org.example.simple.handler.RpcRequestHandler.exception", e);
         }
         return result;
     }

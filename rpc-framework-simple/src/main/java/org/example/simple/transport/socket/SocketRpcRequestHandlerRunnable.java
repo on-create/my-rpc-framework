@@ -2,7 +2,7 @@ package org.example.simple.transport.socket;
 
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
-import org.example.simple.transport.RpcRequestHandler;
+import org.example.simple.handler.RpcRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

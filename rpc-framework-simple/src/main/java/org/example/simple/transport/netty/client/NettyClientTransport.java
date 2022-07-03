@@ -6,6 +6,8 @@ import io.netty.util.AttributeKey;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.utils.checker.RpcMessageChecker;
+import org.example.simple.registry.ServiceRegistry;
+import org.example.simple.registry.ZkServiceRegistry;
 import org.example.simple.transport.ClientTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +18,17 @@ import java.util.concurrent.atomic.AtomicReference;
 public class NettyClientTransport implements ClientTransport {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyClientTransport.class);
-    private final InetSocketAddress inetSocketAddress;
+    private final ServiceRegistry serviceRegistry;
 
-    public NettyClientTransport(InetSocketAddress inetSocketAddress) {
-        this.inetSocketAddress = inetSocketAddress;
+    public NettyClientTransport() {
+        this.serviceRegistry = new ZkServiceRegistry();
     }
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
+            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
             Channel channel = ChannelProvider.get(inetSocketAddress);
             // isActive(): 通过查找底层套接字来查看它是否已经连接来工作
             if (channel.isActive()) {

@@ -1,7 +1,9 @@
-package org.example.simple.registry;
+package org.example.simple.provider.impl;
 
 import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.exception.RpcException;
+import org.example.simple.provider.ServiceProvider;
+import org.example.simple.registry.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,16 +11,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * 默认的服务注册中心实现，通过 Map 保存服务信息
- * 存在问题，后期改进
- */
-public class DefaultServiceRegistry implements ServiceRegistry {
+public class ServiceProviderImpl implements ServiceProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistry.class);
+    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderImpl.class);
 
     /**
-     * 接口名和服务的对应关系，TODO 处理一个接口被两个实现类实现的情况
+     * 接口名和服务的对应关系
+     * note: 处理一个接口被两个实现类实现的情况如何处理？
      * key: service/interface name
      * value: service
      */
@@ -26,11 +25,11 @@ public class DefaultServiceRegistry implements ServiceRegistry {
     private static final Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
     /**
-     * TODO 修改为扫描注解注册
+     * note: 可以修改为扫描注解注册
      * 将这个对象所有实现的接口都注册进去
      */
     @Override
-    public synchronized <T> void register(T service) {
+    public <T> void addServiceProvider(T service) {
         /**
          * getCanonicalName(): 获取该类的规范名称
          * String[] strings = new String[]{"a", "b"}
@@ -57,7 +56,7 @@ public class DefaultServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public synchronized Object getService(String serviceName) {
+    public Object getServiceProvider(String serviceName) {
         Object service = serviceMap.get(serviceName);
         if (service == null) {
             throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND);
