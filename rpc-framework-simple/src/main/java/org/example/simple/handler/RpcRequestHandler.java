@@ -21,7 +21,7 @@ public class RpcRequestHandler {
     }
 
     /**
-     * 处理 rpcRequest 并返回方法执行结果
+     * 处理 rpcRequest: 调用对应的方法，并返回方法执行结果
      * @param rpcRequest
      * @return
      */

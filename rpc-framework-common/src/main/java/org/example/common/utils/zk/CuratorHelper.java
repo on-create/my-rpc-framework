@@ -26,6 +26,10 @@ public class CuratorHelper {
     public static final String ZK_REGISTER_ROOT_PATH = "/rpc";
     private static final Map<String, List<String>> serviceAddressMap = new ConcurrentHashMap<>();
 
+    private CuratorHelper() {
+
+    }
+
     public static CuratorFramework getZkClient() {
         // 重试策略，重试3次，并在两次重试之间等待100毫秒，以防出现连接问题
         RetryPolicy retryPolicy = new RetryNTimes(MAX_RETRIES, SLEEP_MS_BETWEEN_RETRIES);
@@ -56,7 +60,7 @@ public class CuratorHelper {
     }
 
     /**
-     * 获取某个字节下的子节点
+     * 获取某个字节下的子节点（获取所有提供服务的生产者地址）
      */
     public static List<String> getChildrenNodes(final CuratorFramework zkClient, final String serviceName) {
         if (serviceAddressMap.containsKey(serviceName)) {
