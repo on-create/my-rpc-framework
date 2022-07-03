@@ -5,8 +5,8 @@ import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.exception.RpcException;
 import org.example.common.utils.checker.RpcMessageChecker;
-import org.example.simple.registry.ServiceRegistry;
-import org.example.simple.registry.ZkServiceRegistry;
+import org.example.simple.registry.ServiceDiscovery;
+import org.example.simple.registry.ZkServiceDiscovery;
 import org.example.simple.transport.ClientTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +22,15 @@ public class SocketRpcClient implements ClientTransport {
 
     public static final Logger logger = LoggerFactory.getLogger(SocketRpcClient.class);
 
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     public SocketRpcClient() {
-        this.serviceRegistry = new ZkServiceRegistry();
+        this.serviceDiscovery = new ZkServiceDiscovery();
     }
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
-        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
         // 创建Socket对象并且指定服务器的地址和端口号
         try (Socket socket = new Socket()) {
             socket.connect(inetSocketAddress);

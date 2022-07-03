@@ -15,5 +15,6 @@ public class NettyClientMain {
 
         assert "Hello description is 222".equals(hello);
         String hello2 = helloService.hello(new Hello("aaa", "bbb"));
+        System.out.println(hello);
     }
 }
