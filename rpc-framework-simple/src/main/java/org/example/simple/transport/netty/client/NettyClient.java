@@ -7,17 +7,15 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.simple.serialize.kryo.KryoSerializer;
 import org.example.simple.transport.netty.codec.NettyKryoDecoder;
 import org.example.simple.transport.netty.codec.NettyKryoEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class NettyClient {
-
-    private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
+@Slf4j
+public final class NettyClient {
 
     private static final Bootstrap b;
     private static final EventLoopGroup eventLoopGroup;
@@ -52,7 +50,7 @@ public class NettyClient {
     }
 
     public static void close() {
-        logger.info("call close method");
+        log.info("call close method");
         eventLoopGroup.shutdownGracefully();
     }
 

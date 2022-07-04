@@ -4,16 +4,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 自定义客户端 ChannelHandler 来处理服务端发过来的数据
  */
+@Slf4j
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
-
-    private static final Logger logger = LoggerFactory.getLogger(NettyClientHandler.class);
 
     /**
      * 读取服务端传输的消息
@@ -23,7 +21,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            logger.info(String.format("client receive msg: %s", msg));
+            log.info(String.format("client receive msg: %s", msg));
             RpcResponse<?> rpcResponse = (RpcResponse<?>) msg;
             // 声明一个 AttributeKey 对象
             AttributeKey<RpcResponse<?>> key = AttributeKey.valueOf("rpcResponse" + rpcResponse.getRequestId());
@@ -46,7 +44,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("client catch org.example.simple.transport.netty.client.NettyClientHandler.exception: ", cause);
+        log.error("client catch org.example.simple.transport.netty.client.NettyClientHandler.exception: ", cause);
         cause.printStackTrace();
         ctx.close();
     }

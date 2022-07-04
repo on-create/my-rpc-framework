@@ -1,24 +1,15 @@
 package org.example.simple.registry;
 
-import org.apache.curator.framework.CuratorFramework;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.utils.zk.CuratorHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
 /**
  * 基于 zookeeper 实现服务注册
  */
+@Slf4j
 public class ZkServiceRegistry implements ServiceRegistry {
-
-    private static final Logger logger = LoggerFactory.getLogger(ZkServiceRegistry.class);
-    private final CuratorFramework zkClient;
-
-    public ZkServiceRegistry() {
-        zkClient = CuratorHelper.getZkClient();
-        zkClient.start();
-    }
 
     @Override
     public void registerService(String serviceName, InetSocketAddress inetSocketAddress) {
@@ -29,7 +20,6 @@ public class ZkServiceRegistry implements ServiceRegistry {
         // 服务子节点下注册子节点：服务地址
         // inetSocketAddress("127.0.0.1", 9333).toString() -> /127.0.0.1:9333
         servicePath.append(inetSocketAddress.toString());
-        CuratorHelper.createEphemeralNode(zkClient, servicePath.toString());
-        logger.info("节点创建成功，节点为:{}", servicePath);
+        CuratorHelper.createEphemeralNode(servicePath.toString());
     }
 }

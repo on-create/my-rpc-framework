@@ -3,21 +3,20 @@ package org.example.simple.transport.netty.client;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.util.AttributeKey;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.utils.checker.RpcMessageChecker;
 import org.example.simple.registry.ServiceDiscovery;
 import org.example.simple.registry.ZkServiceDiscovery;
 import org.example.simple.transport.ClientTransport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Slf4j
 public class NettyClientTransport implements ClientTransport {
 
-    private static final Logger logger = LoggerFactory.getLogger(NettyClientTransport.class);
     private final ServiceDiscovery serviceDiscovery;
 
     public NettyClientTransport() {
@@ -35,17 +34,17 @@ public class NettyClientTransport implements ClientTransport {
                 channel.writeAndFlush(rpcRequest)
                         .addListener((ChannelFutureListener) future -> {
                             if (future.isSuccess()) {
-                                logger.info("client send message: {}", rpcRequest);
+                                log.info("client send message: {}", rpcRequest);
                             } else {
                                 future.channel().close();
-                                logger.error("Send failed:", future.cause());
+                                log.error("Send failed:", future.cause());
                             }
                         });
 
                 channel.closeFuture().sync();
                 AttributeKey<RpcResponse<?>> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 RpcResponse<?> rpcResponse = channel.attr(key).get();
-                logger.info("client get rpcResponse from channel:{}", rpcResponse);
+                log.info("client get rpcResponse from channel:{}", rpcResponse);
                 // 校验 RpcResponse 和 RpcRequest
                 RpcMessageChecker.check(rpcRequest, rpcResponse);
                 result.set(rpcResponse.getData());
@@ -54,7 +53,7 @@ public class NettyClientTransport implements ClientTransport {
                 System.exit(0);
             }
         } catch (InterruptedException e) {
-            logger.error("occur exception when send rpc message from client:", e);
+            log.error("occur exception when send rpc message from client:", e);
         }
 
         return result.get();

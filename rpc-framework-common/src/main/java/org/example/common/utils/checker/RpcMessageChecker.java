@@ -1,16 +1,15 @@
 package org.example.common.utils.checker;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class RpcMessageChecker {
+@Slf4j
+public final class RpcMessageChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(RpcMessageChecker.class);
     private static final String INTERFACE_NAME = "interfaceName";
 
     private RpcMessageChecker() {
@@ -19,7 +18,7 @@ public class RpcMessageChecker {
 
     public static void check(RpcRequest rpcRequest, RpcResponse<?> rpcResponse) {
         if (rpcResponse == null) {
-            logger.error("调用服务失败,rpcResponse 为null，serviceName:{}", rpcRequest.getInterfaceName());
+
             throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }
 
@@ -28,7 +27,6 @@ public class RpcMessageChecker {
         }
 
         if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCode.SUCCESS.getCode())) {
-            logger.error("调用服务失败,rpcRequest 和 RpcResponse对应不上，serviceName:{},RpcResponse:{}", rpcRequest.getInterfaceName(), rpcResponse);
             throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }
     }

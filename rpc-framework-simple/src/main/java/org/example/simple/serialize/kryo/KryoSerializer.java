@@ -3,12 +3,11 @@ package org.example.simple.serialize.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.common.exception.SerializeException;
 import org.example.simple.serialize.Serializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,9 +16,8 @@ import java.io.IOException;
 /**
  * Kryo序列化类，Kryo序列化效率高，但只兼容 java
  */
+@Slf4j
 public class KryoSerializer implements Serializer {
-
-    private static final Logger logger = LoggerFactory.getLogger(KryoSerializer.class);
 
     /**
      * ThreadLocal.withInitial: 当threadLocal中不存在值时，调用get()，会返回使用初始方法生成的对象
@@ -45,7 +43,6 @@ public class KryoSerializer implements Serializer {
             kryoThreadLocal.remove();
             return output.toBytes();
         } catch (IOException e) {
-            logger.error("occur org.example.simple.serialize.kryo.KryoSerializer.exception when serialize:", e);
             throw new SerializeException("序列化失败");
         }
     }
@@ -60,7 +57,6 @@ public class KryoSerializer implements Serializer {
             kryoThreadLocal.remove();
             return clazz.cast(obj);
         } catch (IOException e) {
-            logger.error("occur org.example.simple.serialize.kryo.KryoSerializer.exception when deserialize:", e);
             throw new SerializeException("反序列化失败");
         }
     }

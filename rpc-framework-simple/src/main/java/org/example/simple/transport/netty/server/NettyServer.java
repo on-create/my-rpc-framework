@@ -10,6 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
 import org.example.simple.provider.ServiceProvider;
@@ -19,8 +20,6 @@ import org.example.simple.registry.ZkServiceRegistry;
 import org.example.simple.serialize.kryo.KryoSerializer;
 import org.example.simple.transport.netty.codec.NettyKryoDecoder;
 import org.example.simple.transport.netty.codec.NettyKryoEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 
@@ -28,9 +27,9 @@ import java.net.InetSocketAddress;
  * 服务端
  * 接收客户端消息，根据客户端的消息调用相应的方法，将结果返回给客户端
  */
+@Slf4j
 public class NettyServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
     private final String host;
     private final int port;
     private final KryoSerializer kryoSerializer;
@@ -79,7 +78,7 @@ public class NettyServer {
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            logger.error("occur org.example.simple.transport.netty.server.NettyRpcServer.exception when start server:", e);
+            log.error("occur org.example.simple.transport.netty.server.NettyRpcServer.exception when start server:", e);
         }
     }
 }

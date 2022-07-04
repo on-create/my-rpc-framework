@@ -7,7 +7,7 @@ import java.util.concurrent.*;
 /**
  * 创建 ThreadPool（线程池）的工具类
  */
-public class ThreadPoolFactoryUtil {
+public final class ThreadPoolFactoryUtil {
 
     /**
      * 线程池参数

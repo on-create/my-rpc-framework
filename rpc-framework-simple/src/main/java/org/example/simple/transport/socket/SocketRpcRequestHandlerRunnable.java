@@ -1,33 +1,30 @@
 package org.example.simple.transport.socket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
+import org.example.common.utils.factory.SingletonFactory;
 import org.example.simple.handler.RpcRequestHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+@Slf4j
 public class SocketRpcRequestHandlerRunnable implements Runnable {
 
-    private static final Logger logger = LoggerFactory.getLogger(SocketRpcRequestHandlerRunnable.class);
     private final Socket socket;
-    private static final RpcRequestHandler requestHandler;
-
-    static {
-        requestHandler = new RpcRequestHandler();
-    }
+    private final RpcRequestHandler requestHandler;
 
     public SocketRpcRequestHandlerRunnable(Socket socket) {
         this.socket = socket;
+        this.requestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
     }
 
     @Override
     public void run() {
-        logger.info(String.format("server handle message from client by thread: %s", Thread.currentThread().getName()));
+        log.info("server handle message from client by thread: [{}]", Thread.currentThread().getName());
         try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             // 获取请求
@@ -42,7 +39,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
             }
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur org.example.simple.transport.socket.SocketRpcRequestHandlerRunnable.exception:", e);
+            log.error("occur org.example.simple.transport.socket.SocketRpcRequestHandlerRunnable.exception:", e);
         }
     }
 }

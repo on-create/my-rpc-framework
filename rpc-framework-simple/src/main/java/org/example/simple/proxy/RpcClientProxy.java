@@ -1,9 +1,8 @@
 package org.example.simple.proxy;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.simple.transport.ClientTransport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -14,9 +13,8 @@ import java.util.UUID;
  * 动态代理类
  * 当动态代理对象调用一个方法的时候，实际调用的是下面的 invoke 方法
  */
+@Slf4j
 public class RpcClientProxy implements InvocationHandler {
-
-    private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
 
     // 用于发送请求给服务端，对应socket 和 netty两种实现方式
     private final ClientTransport clientTransport;
@@ -47,7 +45,7 @@ public class RpcClientProxy implements InvocationHandler {
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        logger.info("Call invoke method and invoked method: {}", method.getName());
+        log.info("Call invoke method and invoked method: {}", method.getName());
         // Builder模式创建对象
         RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())
                 .parameters(args)

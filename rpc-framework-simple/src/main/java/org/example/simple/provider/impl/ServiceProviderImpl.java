@@ -1,23 +1,20 @@
 package org.example.simple.provider.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.exception.RpcException;
 import org.example.simple.provider.ServiceProvider;
-import org.example.simple.registry.ServiceRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class ServiceProviderImpl implements ServiceProvider {
-
-    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderImpl.class);
 
     /**
      * 接口名和服务的对应关系
-     * note: 处理一个接口被两个实现类实现的情况如何处理？
+     * note: 处理一个接口被两个实现类实现的情况如何处理？(通过group分组)
      * key: service/interface name
      * value: service
      */
@@ -43,7 +40,7 @@ public class ServiceProviderImpl implements ServiceProvider {
         }
         registeredService.add(serviceName);
         serviceMap.put(serviceName, service);
-        logger.info("Add service: {} and interfaces:{}", serviceName, service.getClass().getInterfaces());
+        log.info("Add service: {} and interfaces:{}", serviceName, service.getClass().getInterfaces());
     }
 
     @Override
