@@ -5,6 +5,9 @@ import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;
 
+/**
+ * 校验 RpcRequest 和 RpcResponse
+ */
 @Slf4j
 public final class RpcMessageChecker {
 

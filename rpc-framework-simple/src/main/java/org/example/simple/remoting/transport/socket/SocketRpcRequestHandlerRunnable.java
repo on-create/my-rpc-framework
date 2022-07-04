@@ -3,7 +3,7 @@ package org.example.simple.remoting.transport.socket;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
-import org.example.common.utils.factory.SingletonFactory;
+import org.example.common.factory.SingletonFactory;
 import org.example.simple.handler.RpcRequestHandler;
 
 import java.io.IOException;

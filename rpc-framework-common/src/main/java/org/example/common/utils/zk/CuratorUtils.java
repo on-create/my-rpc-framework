@@ -7,26 +7,28 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
-import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.CreateMode;
 import org.example.common.exception.RpcException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-public class CuratorHelper {
+public class CuratorUtils {
 
     private static final int BASE_SLEEP_TIME = 1000;
     private static final int MAX_RETRIES = 5;
     private static final String CONNECTION_STRING = "127.0.0.1:2181";
     public static final String ZK_REGISTER_ROOT_PATH = "/rpc";
     private static final Map<String, List<String>> serviceAddressMap = new ConcurrentHashMap<>();
-    private static CuratorFramework zkClient = getZkClient();
+    private static CuratorFramework zkClient;
 
-    private CuratorHelper() {
+    static {
+        zkClient = getZkClient();
+    }
+
+    private CuratorUtils() {
 
     }
 
@@ -64,7 +66,31 @@ public class CuratorHelper {
     }
 
     /**
+     * 创建持久化节点
+     * 持久化节点不会因为客户端断开连接而被删除（需要手动删除）
+     * @param path 节点路径
+     */
+    public static void createPersistentNode(String path) {
+        try {
+            if (zkClient.checkExists().forPath(path) == null) {
+                // eg: /rpc/org.example.api.HelloService/127.0.0.1:9999
+                zkClient.create()
+                        .creatingParentsIfNeeded()
+                        .withMode(CreateMode.PERSISTENT)
+                        .forPath(path);
+                log.info("节点创建成功，节点为:[{}]", path);
+            } else {
+                log.info("节点已经存在，节点为:[{}]", path);
+            }
+        } catch (Exception e) {
+            throw new RpcException(e.getMessage(), e.getCause());
+        }
+    }
+
+    /**
      * 获取某个字节下的子节点（获取所有提供服务的生产者地址）
+     * @param serviceName 服务对象接口名 eg: org.example.api.HelloService
+     * @return 指定字节下的所有子节点
      */
     public static List<String> getChildrenNodes(String serviceName) {
         if (serviceAddressMap.containsKey(serviceName)) {
@@ -72,7 +98,7 @@ public class CuratorHelper {
         }
 
         List<String> result;
-        String servicePath = CuratorHelper.ZK_REGISTER_ROOT_PATH + "/" + serviceName;
+        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + serviceName;
         try {
             result = zkClient.getChildren().forPath(servicePath);
             serviceAddressMap.put(serviceName, result);
@@ -84,12 +110,12 @@ public class CuratorHelper {
     }
 
     /**
-     * 注册监听
+     * 注册监听指定节点
      * @param zkClient
-     * @param serviceName 服务名称
+     * @param serviceName 服务对象接口名：eg: org.example.api.HelloService
      */
     private static void registerWatcher(CuratorFramework zkClient, String serviceName) {
-        String servicePath = CuratorHelper.ZK_REGISTER_ROOT_PATH + "/" + serviceName;
+        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + serviceName;
         PathChildrenCache pathChildrenCache = new PathChildrenCache(zkClient, servicePath, true);
         PathChildrenCacheListener pathChildrenCacheListener = ((curatorFramework, pathChildrenCacheEvent) -> {
             // 子节点更新后触发，更新serviceAddressMap
@@ -100,7 +126,7 @@ public class CuratorHelper {
         try {
             pathChildrenCache.start();
         } catch (Exception e) {
-            log.error("occur exception:", e);
+            throw new RpcException(e.getMessage(), e.getCause());
         }
     }
 }

@@ -1,7 +1,7 @@
 package org.example.simple.registry;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.utils.zk.CuratorHelper;
+import org.example.common.utils.zk.CuratorUtils;
 
 import java.net.InetSocketAddress;
 
@@ -15,11 +15,11 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
     public InetSocketAddress lookupService(String serviceName) {
         // TODO 负载均衡
         // 直接找的第一个地址
-        String serviceAddress = CuratorHelper.getChildrenNodes(serviceName).get(0);
+        String serviceAddress = CuratorUtils.getChildrenNodes(serviceName).get(0);
         log.info("成功找到服务地址:{}", serviceAddress);
-        return new InetSocketAddress(
-                serviceAddress.split(":")[0],
-                Integer.parseInt(serviceAddress.split(":")[1])
-        );
+        String[] socketAddressArray = serviceAddress.split(":");
+        String host = socketAddressArray[0];
+        int port = Integer.parseInt(socketAddressArray[1]);
+        return new InetSocketAddress(host, port);
     }
 }
