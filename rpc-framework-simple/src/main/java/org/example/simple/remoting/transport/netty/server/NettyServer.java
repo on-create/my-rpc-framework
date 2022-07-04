@@ -11,6 +11,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.example.simple.config.CustomShutdownHook;
 import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
 import org.example.simple.provider.ServiceProvider;
@@ -75,6 +76,7 @@ public class NettyServer {
 
             // 绑定端口，同步等待绑定成功
             ChannelFuture f = b.bind(host, port).sync();
+            CustomShutdownHook.getCustomShutdownHook().clearAll();
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {

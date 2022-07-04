@@ -2,6 +2,7 @@ package org.example.simple.remoting.transport.socket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
+import org.example.simple.config.CustomShutdownHook;
 import org.example.simple.provider.ServiceProvider;
 import org.example.simple.provider.impl.ServiceProviderImpl;
 import org.example.simple.registry.ServiceRegistry;
@@ -40,11 +41,11 @@ public class SocketRpcServer {
     public void start() {
         try (ServerSocket server = new ServerSocket(port)) {
             server.bind(new InetSocketAddress(host, port));
-            log.info("server starts...");
+            CustomShutdownHook.getCustomShutdownHook().clearAll();
             Socket socket;
             // Socket[addr=/127.0.0.1,port=65404,localport=9999]
             while ((socket = server.accept()) != null) {
-                log.info("client connected");
+                log.info("client connected [{}]", socket.getInetAddress());
                 threadPool.execute(new SocketRpcRequestHandlerRunnable(socket));
             }
         } catch (IOException e) {
