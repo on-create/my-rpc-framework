@@ -1,8 +1,8 @@
 package org.example.simple.handler;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;
 import org.example.simple.provider.ServiceProvider;

@@ -1,6 +1,6 @@
-package org.example.simple.transport;
+package org.example.simple.remoting.transport;
 
-import org.example.common.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcRequest;
 
 /**
  * 客户端发送 RpcRequest 接口

@@ -2,7 +2,7 @@ package org.example.server;
 
 import org.example.api.HelloService;
 import org.example.server.Impl.HelloServiceImpl;
-import org.example.simple.transport.socket.SocketRpcServer;
+import org.example.simple.remoting.transport.socket.SocketRpcServer;
 
 public class SocketServerMain {
     public static void main(String[] args) { ;

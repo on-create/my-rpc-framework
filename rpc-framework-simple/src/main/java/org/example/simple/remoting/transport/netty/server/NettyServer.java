@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty.server;
+package org.example.simple.remoting.transport.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -11,15 +11,15 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.simple.provider.ServiceProvider;
 import org.example.simple.provider.impl.ServiceProviderImpl;
 import org.example.simple.registry.ServiceRegistry;
 import org.example.simple.registry.ZkServiceRegistry;
 import org.example.simple.serialize.kryo.KryoSerializer;
-import org.example.simple.transport.netty.codec.kyro.NettyKryoDecoder;
-import org.example.simple.transport.netty.codec.kyro.NettyKryoEncoder;
+import org.example.simple.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
+import org.example.simple.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 
 import java.net.InetSocketAddress;
 
@@ -78,7 +78,7 @@ public class NettyServer {
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            log.error("occur org.example.simple.transport.netty.server.NettyRpcServer.exception when start server:", e);
+            log.error("occur org.example.simple.remoting.transport.netty.server.NettyRpcServer.exception when start server:", e);
         }
     }
 }

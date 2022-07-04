@@ -2,7 +2,7 @@ package org.example.server;
 
 import org.example.api.HelloService;
 import org.example.server.Impl.HelloServiceImpl;
-import org.example.simple.transport.netty.server.NettyServer;
+import org.example.simple.remoting.transport.netty.server.NettyServer;
 
 public class NettyServerMain {
     public static void main(String[] args) {

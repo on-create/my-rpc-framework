@@ -1,4 +1,4 @@
-package org.example.common.dto;
+package org.example.simple.remoting.dto;
 
 import lombok.*;
 

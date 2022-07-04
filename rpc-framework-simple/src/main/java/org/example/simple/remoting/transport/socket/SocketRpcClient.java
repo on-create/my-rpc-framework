@@ -1,14 +1,14 @@
-package org.example.simple.transport.socket;
+package org.example.simple.remoting.transport.socket;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.common.exception.RpcException;
-import org.example.common.utils.checker.RpcMessageChecker;
+import org.example.simple.remoting.dto.RpcMessageChecker;
 import org.example.simple.registry.ServiceDiscovery;
 import org.example.simple.registry.ZkServiceDiscovery;
-import org.example.simple.transport.ClientTransport;
+import org.example.simple.remoting.transport.ClientTransport;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

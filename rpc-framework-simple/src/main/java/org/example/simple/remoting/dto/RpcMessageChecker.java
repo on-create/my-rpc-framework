@@ -1,8 +1,6 @@
-package org.example.common.utils.checker;
+package org.example.simple.remoting.dto;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
 import org.example.common.enumeration.RpcErrorMessageEnum;
 import org.example.common.enumeration.RpcResponseCode;
 import org.example.common.exception.RpcException;

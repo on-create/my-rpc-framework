@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty.server;
+package org.example.simple.remoting.transport.netty.server;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -6,8 +6,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.common.factory.SingletonFactory;
 import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
 import org.example.simple.handler.RpcRequestHandler;
@@ -56,7 +56,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("server org.example.simple.transport.netty.server.NettyServerHandler.catch exception");
+        log.error("server org.example.simple.remoting.transport.netty.server.NettyServerHandler.catch exception");
         cause.printStackTrace();
         ctx.close();
     }

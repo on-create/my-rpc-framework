@@ -1,8 +1,8 @@
-package org.example.simple.transport.socket;
+package org.example.simple.remoting.transport.socket;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.common.utils.factory.SingletonFactory;
 import org.example.simple.handler.RpcRequestHandler;
 
@@ -39,7 +39,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
             }
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
-            log.error("occur org.example.simple.transport.socket.SocketRpcRequestHandlerRunnable.exception:", e);
+            log.error("occur org.example.simple.remoting.transport.socket.SocketRpcRequestHandlerRunnable.exception:", e);
         }
     }
 }

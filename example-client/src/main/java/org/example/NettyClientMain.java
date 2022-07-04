@@ -2,9 +2,9 @@ package org.example;
 
 import org.example.api.Hello;
 import org.example.api.HelloService;
-import org.example.simple.transport.ClientTransport;
+import org.example.simple.remoting.transport.ClientTransport;
 import org.example.simple.proxy.RpcClientProxy;
-import org.example.simple.transport.netty.client.NettyClientTransport;
+import org.example.simple.remoting.transport.netty.client.NettyClientTransport;
 
 public class NettyClientMain {
     public static void main(String[] args) {

@@ -1,15 +1,17 @@
-package org.example.simple.transport.netty.client;
+package org.example.simple.remoting.transport.netty.client;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
-import org.example.common.utils.checker.RpcMessageChecker;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcMessageChecker;
 import org.example.simple.registry.ServiceDiscovery;
 import org.example.simple.registry.ZkServiceDiscovery;
-import org.example.simple.transport.ClientTransport;
+import org.example.simple.remoting.transport.ClientTransport;
+import org.example.simple.remoting.transport.netty.client.ChannelProvider;
+import org.example.simple.remoting.transport.netty.client.NettyClient;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicReference;

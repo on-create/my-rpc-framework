@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty.client;
+package org.example.simple.remoting.transport.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -8,11 +8,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.simple.serialize.kryo.KryoSerializer;
-import org.example.simple.transport.netty.codec.kyro.NettyKryoDecoder;
-import org.example.simple.transport.netty.codec.kyro.NettyKryoEncoder;
+import org.example.simple.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
+import org.example.simple.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 
 @Slf4j
 public final class NettyClient {

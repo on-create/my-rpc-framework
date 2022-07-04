@@ -1,11 +1,11 @@
-package org.example.simple.transport.netty.client;
+package org.example.simple.remoting.transport.netty.client;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcResponse;
+import org.example.simple.remoting.dto.RpcResponse;
 
 /**
  * 自定义客户端 ChannelHandler 来处理服务端发过来的数据
@@ -44,7 +44,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("client catch org.example.simple.transport.netty.client.NettyClientHandler.exception: ", cause);
+        log.error("client catch org.example.simple.remoting.transport.netty.client.NettyClientHandler.exception: ", cause);
         cause.printStackTrace();
         ctx.close();
     }

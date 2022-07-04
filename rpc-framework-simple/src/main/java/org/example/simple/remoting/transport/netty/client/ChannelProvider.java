@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty.client;
+package org.example.simple.remoting.transport.netty.client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;

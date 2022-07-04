@@ -2,9 +2,9 @@ package org.example;
 
 import org.example.api.Hello;
 import org.example.api.HelloService;
-import org.example.simple.transport.ClientTransport;
+import org.example.simple.remoting.transport.ClientTransport;
 import org.example.simple.proxy.RpcClientProxy;
-import org.example.simple.transport.socket.SocketRpcClient;
+import org.example.simple.remoting.transport.socket.SocketRpcClient;
 
 public class RpcFrameworkSimpleClientMain {
     public static void main(String[] args) {

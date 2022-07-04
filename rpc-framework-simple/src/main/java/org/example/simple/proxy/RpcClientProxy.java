@@ -1,8 +1,8 @@
 package org.example.simple.proxy;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.dto.RpcRequest;
-import org.example.simple.transport.ClientTransport;
+import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.transport.ClientTransport;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
