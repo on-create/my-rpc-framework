@@ -30,28 +30,28 @@ public class NettyClientTransport implements ClientTransport {
             InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
             Channel channel = ChannelProvider.get(inetSocketAddress);
             // isActive(): 通过查找底层套接字来查看它是否已经连接来工作
-            if (channel.isActive()) {
-                channel.writeAndFlush(rpcRequest)
-                        .addListener((ChannelFutureListener) future -> {
-                            if (future.isSuccess()) {
-                                log.info("client send message: {}", rpcRequest);
-                            } else {
-                                future.channel().close();
-                                log.error("Send failed:", future.cause());
-                            }
-                        });
-
-                channel.closeFuture().sync();
-                AttributeKey<RpcResponse<?>> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
-                RpcResponse<?> rpcResponse = channel.attr(key).get();
-                log.info("client get rpcResponse from channel:{}", rpcResponse);
-                // 校验 RpcResponse 和 RpcRequest
-                RpcMessageChecker.check(rpcRequest, rpcResponse);
-                result.set(rpcResponse.getData());
-            } else {
+            if (!channel.isActive()) {
                 NettyClient.close();
-                System.exit(0);
+                return null;
             }
+
+            channel.writeAndFlush(rpcRequest)
+                    .addListener((ChannelFutureListener) future -> {
+                        if (future.isSuccess()) {
+                            log.info("client send message: {}", rpcRequest);
+                        } else {
+                            future.channel().close();
+                            log.error("Send failed:", future.cause());
+                        }
+                    });
+
+            channel.closeFuture().sync();
+            AttributeKey<RpcResponse<?>> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
+            RpcResponse<?> rpcResponse = channel.attr(key).get();
+            log.info("client get rpcResponse from channel:{}", rpcResponse);
+            // 校验 RpcResponse 和 RpcRequest
+            RpcMessageChecker.check(rpcRequest, rpcResponse);
+            result.set(rpcResponse.getData());
         } catch (InterruptedException e) {
             log.error("occur exception when send rpc message from client:", e);
         }

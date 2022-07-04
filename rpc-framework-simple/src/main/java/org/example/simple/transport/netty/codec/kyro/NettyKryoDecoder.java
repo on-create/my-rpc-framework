@@ -1,4 +1,4 @@
-package org.example.simple.transport.netty.codec;
+package org.example.simple.transport.netty.codec.kyro;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

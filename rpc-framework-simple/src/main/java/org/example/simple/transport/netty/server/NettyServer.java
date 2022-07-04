@@ -18,8 +18,8 @@ import org.example.simple.provider.impl.ServiceProviderImpl;
 import org.example.simple.registry.ServiceRegistry;
 import org.example.simple.registry.ZkServiceRegistry;
 import org.example.simple.serialize.kryo.KryoSerializer;
-import org.example.simple.transport.netty.codec.NettyKryoDecoder;
-import org.example.simple.transport.netty.codec.NettyKryoEncoder;
+import org.example.simple.transport.netty.codec.kyro.NettyKryoDecoder;
+import org.example.simple.transport.netty.codec.kyro.NettyKryoEncoder;
 
 import java.net.InetSocketAddress;
 

@@ -8,6 +8,7 @@ import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.dto.RpcRequest;
 import org.example.common.dto.RpcResponse;
+import org.example.common.factory.SingletonFactory;
 import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
 import org.example.simple.handler.RpcRequestHandler;
 
@@ -24,7 +25,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     private final ExecutorService threadPool;
 
     public NettyServerHandler() {
-        this.rpcRequestHandler = new RpcRequestHandler();
+        this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
         this.threadPool = ThreadPoolFactoryUtil.createDefaultThreadPool(THREAD_NAME_PREFIX);
     }
 
