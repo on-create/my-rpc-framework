@@ -11,11 +11,11 @@ import java.util.concurrent.*;
  * 创建 ThreadPool（线程池）的工具类
  */
 @Slf4j
-public final class ThreadPoolFactoryUtil {
+public final class ThreadPoolFactoryUtils {
 
     private static final Map<String, ExecutorService> threadPools = new ConcurrentHashMap<>();
 
-    private ThreadPoolFactoryUtil() {
+    private ThreadPoolFactoryUtils() {
 
     }
 

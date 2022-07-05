@@ -1,11 +1,8 @@
 package org.example.simple.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.C;
-import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
+import org.example.common.utils.concurrent.ThreadPoolFactoryUtils;
 import org.example.common.utils.zk.CuratorUtils;
-
-import java.util.concurrent.ExecutorService;
 
 /**
  * 当服务端（provider）关闭的时候做一些事情，比如取消注册所有服务
@@ -25,7 +22,7 @@ public class CustomShutdownHook {
         Runtime.getRuntime()
                 .addShutdownHook(new Thread(() -> {
             CuratorUtils.clearRegistry();
-            ThreadPoolFactoryUtil.shutDownAllThreadPool();
+            ThreadPoolFactoryUtils.shutDownAllThreadPool();
         }));
     }
 }

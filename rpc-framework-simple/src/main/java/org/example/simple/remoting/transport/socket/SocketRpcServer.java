@@ -1,7 +1,7 @@
 package org.example.simple.remoting.transport.socket;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
+import org.example.common.utils.concurrent.ThreadPoolFactoryUtils;
 import org.example.simple.config.CustomShutdownHook;
 import org.example.simple.provider.ServiceProvider;
 import org.example.simple.provider.impl.ServiceProviderImpl;
@@ -27,7 +27,7 @@ public class SocketRpcServer {
         this.host = host;
         this.port = port;
         // 初始化线程池
-        threadPool = ThreadPoolFactoryUtil.createCustomThreadPoolIfAbsent("socket-server-rpc-pool");
+        threadPool = ThreadPoolFactoryUtils.createCustomThreadPoolIfAbsent("socket-server-rpc-pool");
         serviceRegistry = new ZkServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
     }

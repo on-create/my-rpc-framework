@@ -9,7 +9,7 @@ import org.example.common.factory.SingletonFactory;
 import org.example.common.utils.concurrent.threadpool.CustomThreadPoolConfig;
 import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
-import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
+import org.example.common.utils.concurrent.ThreadPoolFactoryUtils;
 import org.example.simple.handler.RpcRequestHandler;
 
 import java.util.concurrent.ExecutorService;
@@ -28,7 +28,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
         CustomThreadPoolConfig customThreadPoolConfig = new CustomThreadPoolConfig();
         customThreadPoolConfig.setCorePoolSize(6);
-        this.threadPool = ThreadPoolFactoryUtil.createCustomThreadPoolIfAbsent(THREAD_NAME_PREFIX, customThreadPoolConfig);
+        this.threadPool = ThreadPoolFactoryUtils.createCustomThreadPoolIfAbsent(THREAD_NAME_PREFIX, customThreadPoolConfig);
     }
 
     @Override
