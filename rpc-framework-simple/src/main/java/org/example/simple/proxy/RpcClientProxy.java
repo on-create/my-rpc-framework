@@ -2,6 +2,7 @@ package org.example.simple.proxy;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.example.simple.remoting.dto.RpcMessageChecker;
 import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
 import org.example.simple.remoting.transport.ClientTransport;
@@ -53,7 +54,7 @@ public class RpcClientProxy implements InvocationHandler {
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        log.info("Call invoke method and invoked method: {}", method.getName());
+        log.info("invoked method: [{}]", method.getName());
         // Builder模式创建对象
         RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())
                 .parameters(args)
@@ -62,16 +63,18 @@ public class RpcClientProxy implements InvocationHandler {
                 .requestId(UUID.randomUUID().toString())
                 .build();
 
-        Object result = null;
+        RpcResponse<?> rpcResponse = null;
         if (clientTransport instanceof NettyClientTransport) {
             CompletableFuture<RpcResponse<?>> completableFuture = (CompletableFuture<RpcResponse<?>>) clientTransport.sendRpcRequest(rpcRequest);
-            result = completableFuture.get().getData();
+            rpcResponse = completableFuture.get();
         }
 
         if (clientTransport instanceof SocketRpcClient) {
-            RpcResponse<?> response = (RpcResponse<?>) clientTransport.sendRpcRequest(rpcRequest);
-            result = response.getData();
+            rpcResponse = (RpcResponse<?>) clientTransport.sendRpcRequest(rpcRequest);
         }
-        return result;
+
+        // 校验 RpcResponse 和 RpcRequest
+        RpcMessageChecker.check(rpcRequest, rpcResponse);
+        return rpcResponse.getData();
     }
 }

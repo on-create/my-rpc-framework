@@ -2,6 +2,7 @@ package org.example.simple.remoting.transport.netty.client;
 
 import org.example.simple.remoting.dto.RpcResponse;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,14 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UnprocessedRequests {
 
-    private static final ConcurrentHashMap<String, CompletableFuture<RpcResponse<?>>> unprocessedResponseFutures = new ConcurrentHashMap<>();
+    private static final Map<String, CompletableFuture<RpcResponse<?>>> unprocessedResponseFutures = new ConcurrentHashMap<>();
 
     public void put(String requestId, CompletableFuture<RpcResponse<?>> future) {
         unprocessedResponseFutures.put(requestId, future);
-    }
-
-    public void remove(String requestId) {
-        unprocessedResponseFutures.remove(requestId);
     }
 
     public void complete(RpcResponse<?> rpcResponse) {
