@@ -16,7 +16,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
         // TODO 负载均衡
         // 直接找的第一个地址
         String serviceAddress = CuratorUtils.getChildrenNodes(serviceName).get(0);
-        log.info("成功找到服务地址:{}", serviceAddress);
+        log.info("成功找到服务地址:[{}]", serviceAddress);
         String[] socketAddressArray = serviceAddress.split(":");
         String host = socketAddressArray[0];
         int port = Integer.parseInt(socketAddressArray[1]);
