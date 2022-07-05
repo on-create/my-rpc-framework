@@ -10,6 +10,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simple.config.CustomShutdownHook;
 import org.example.simple.remoting.dto.RpcRequest;
@@ -23,6 +24,7 @@ import org.example.simple.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
 import org.example.simple.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 服务端
@@ -64,6 +66,8 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
+                            // 30 秒内没有收到客户端请求的话就关闭连接
+                            ch.pipeline().addLast(new IdleStateHandler(30, 0,0, TimeUnit.SECONDS));
                             ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcRequest.class));
                             ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcResponse.class));
                             ch.pipeline().addLast(new NettyServerHandler());

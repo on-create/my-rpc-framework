@@ -1,11 +1,19 @@
 package org.example.simple.remoting.transport.netty.client;
 
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.example.common.enumeration.RpcMessageTypeEnum;
 import org.example.common.factory.SingletonFactory;
+import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
+
+import java.net.InetSocketAddress;
 
 /**
  * 自定义客户端 ChannelHandler 来处理服务端发过来的数据
@@ -45,5 +53,23 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         log.error("client catch org.example.simple.remoting.transport.netty.client.NettyClientHandler.exception: ", cause);
         cause.printStackTrace();
         ctx.close();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            IdleState state = ((IdleStateEvent) evt).state();
+            if (state == IdleState.WRITER_IDLE) {
+                log.info("write idle happen [{}]", ctx.channel().remoteAddress());
+                Channel channel = ChannelProvider.get((InetSocketAddress) ctx.channel().remoteAddress());
+                RpcRequest rpcRequest = RpcRequest.builder()
+                        .rpcMessageTypeEnum(RpcMessageTypeEnum.HEART_BEAT)
+                        .build();
+                channel.writeAndFlush(rpcRequest)
+                        .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+            } else {
+                super.userEventTriggered(ctx, evt);
+            }
+        }
     }
 }

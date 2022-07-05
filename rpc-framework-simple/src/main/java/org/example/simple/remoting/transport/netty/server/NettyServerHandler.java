@@ -3,8 +3,11 @@ package org.example.simple.remoting.transport.netty.server;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.example.common.enumeration.RpcMessageTypeEnum;
 import org.example.common.factory.SingletonFactory;
 import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
@@ -27,6 +30,10 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         try {
             log.info("server receive msg: [{}] ", msg);
             RpcRequest rpcRequest = (RpcRequest) msg;
+            if (rpcRequest.getRpcMessageTypeEnum() == RpcMessageTypeEnum.HEART_BEAT) {
+                log.info("receive heat beat msg from client");
+                return;
+            }
             // 执行目标方法，并返回结果
             Object result = rpcRequestHandler.handle(rpcRequest);
             log.info(String.format("server get result: %s", result.toString()));
@@ -55,5 +62,18 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         log.error("server org.example.simple.remoting.transport.netty.server.NettyServerHandler.catch exception");
         cause.printStackTrace();
         ctx.close();
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            IdleState state = ((IdleStateEvent) evt).state();
+            if (state == IdleState.READER_IDLE) {
+                log.info("idle check happen, so close the connection");
+                ctx.close();
+            }
+        } else {
+            super.userEventTriggered(ctx, evt);
+        }
     }
 }
