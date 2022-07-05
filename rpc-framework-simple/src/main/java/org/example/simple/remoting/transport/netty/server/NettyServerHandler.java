@@ -1,10 +1,12 @@
 package org.example.simple.remoting.transport.netty.server;
 
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.example.common.factory.SingletonFactory;
+import org.example.common.utils.concurrent.threadpool.CustomThreadPoolConfig;
 import org.example.simple.remoting.dto.RpcRequest;
 import org.example.simple.remoting.dto.RpcResponse;
 import org.example.common.utils.concurrent.ThreadPoolFactoryUtil;
@@ -24,7 +26,9 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     public NettyServerHandler() {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
-        this.threadPool = ThreadPoolFactoryUtil.createDefaultThreadPool(THREAD_NAME_PREFIX);
+        CustomThreadPoolConfig customThreadPoolConfig = new CustomThreadPoolConfig();
+        customThreadPoolConfig.setCorePoolSize(6);
+        this.threadPool = ThreadPoolFactoryUtil.createCustomThreadPoolIfAbsent(THREAD_NAME_PREFIX, customThreadPoolConfig);
     }
 
     @Override
@@ -38,11 +42,15 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 log.info(String.format("server get result: %s", result.toString()));
                 if (ctx.channel().isActive() && ctx.channel().isWritable()) {
                     // 返回方法执行结果给客户端
+                    RpcResponse<?> rpcResponse = null;
                     if (result instanceof RpcResponse) {
-                        ctx.writeAndFlush(result);
+                        rpcResponse = (RpcResponse<?>) result;
                     } else {
-                        ctx.writeAndFlush(RpcResponse.success(result, rpcRequest.getRequestId()));
+                        rpcResponse = RpcResponse.success(result, rpcRequest.getRequestId());
                     }
+                    // 发送消息，当操作失败或取消时，关闭通道
+                    ctx.writeAndFlush(rpcResponse)
+                            .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                 } else {
                     log.error("not writable now, message dropped");
                 }

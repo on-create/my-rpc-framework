@@ -52,6 +52,7 @@ public class NettyServer {
     }
 
     public void start() {
+        CustomShutdownHook.getCustomShutdownHook().clearAll();
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -59,6 +60,7 @@ public class NettyServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
+                    // 当客户端第一次进行请求的时候才会进行初始化
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
@@ -76,11 +78,14 @@ public class NettyServer {
 
             // 绑定端口，同步等待绑定成功
             ChannelFuture f = b.bind(host, port).sync();
-            CustomShutdownHook.getCustomShutdownHook().clearAll();
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            log.error("occur org.example.simple.remoting.transport.netty.server.NettyRpcServer.exception when start server:", e);
+            log.error("occur exception when start server:", e);
+        } finally {
+            log.error("shutdown bossGroup and workerGroup");
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
     }
 }

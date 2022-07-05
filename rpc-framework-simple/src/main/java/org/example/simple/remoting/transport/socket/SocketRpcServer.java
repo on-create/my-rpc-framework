@@ -27,7 +27,7 @@ public class SocketRpcServer {
         this.host = host;
         this.port = port;
         // 初始化线程池
-        threadPool = ThreadPoolFactoryUtil.createDefaultThreadPool("socket-server-rpc-pool");
+        threadPool = ThreadPoolFactoryUtil.createCustomThreadPoolIfAbsent("socket-server-rpc-pool");
         serviceRegistry = new ZkServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
     }

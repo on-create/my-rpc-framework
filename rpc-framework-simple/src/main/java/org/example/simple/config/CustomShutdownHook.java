@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 @Slf4j
 public class CustomShutdownHook {
 
-    private final ExecutorService threadPool = ThreadPoolFactoryUtil.createDefaultThreadPool("custom-shutdown-hook-rpc-pool");
     private static final CustomShutdownHook CUSTOM_SHUTDOWN_HOOK = new CustomShutdownHook();
 
     public static CustomShutdownHook getCustomShutdownHook() {
@@ -26,7 +25,7 @@ public class CustomShutdownHook {
         Runtime.getRuntime()
                 .addShutdownHook(new Thread(() -> {
             CuratorUtils.clearRegistry();
-            threadPool.shutdown();
+            ThreadPoolFactoryUtil.shutDownAllThreadPool();
         }));
     }
 }
