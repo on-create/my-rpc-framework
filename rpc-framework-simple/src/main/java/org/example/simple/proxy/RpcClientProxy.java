@@ -1,13 +1,18 @@
 package org.example.simple.proxy;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.simple.remoting.dto.RpcRequest;
+import org.example.simple.remoting.dto.RpcResponse;
 import org.example.simple.remoting.transport.ClientTransport;
+import org.example.simple.remoting.transport.netty.client.NettyClientTransport;
+import org.example.simple.remoting.transport.socket.SocketRpcClient;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 动态代理类
@@ -44,7 +49,9 @@ public class RpcClientProxy implements InvocationHandler {
      * @param method 与代理类对象调用的方法相对应
      * @param args 当前method方法的参数
      */
+    @SneakyThrows
     @Override
+    @SuppressWarnings("unchecked")
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         log.info("Call invoke method and invoked method: {}", method.getName());
         // Builder模式创建对象
@@ -55,6 +62,16 @@ public class RpcClientProxy implements InvocationHandler {
                 .requestId(UUID.randomUUID().toString())
                 .build();
 
-        return clientTransport.sendRpcRequest(rpcRequest);
+        Object result = null;
+        if (clientTransport instanceof NettyClientTransport) {
+            CompletableFuture<RpcResponse<?>> completableFuture = (CompletableFuture<RpcResponse<?>>) clientTransport.sendRpcRequest(rpcRequest);
+            result = completableFuture.get().getData();
+        }
+
+        if (clientTransport instanceof SocketRpcClient) {
+            RpcResponse<?> response = (RpcResponse<?>) clientTransport.sendRpcRequest(rpcRequest);
+            result = response.getData();
+        }
+        return result;
     }
 }

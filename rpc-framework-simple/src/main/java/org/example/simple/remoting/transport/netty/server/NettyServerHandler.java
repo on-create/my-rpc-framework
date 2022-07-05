@@ -1,7 +1,5 @@
 package org.example.simple.remoting.transport.netty.server;
 
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.util.ReferenceCountUtil;
@@ -32,21 +30,22 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         threadPool.execute(() -> {
-            log.info(String.format("server handle message from client by thread: %s", Thread.currentThread().getName()));
             try {
-                log.info(String.format("server receive msg: %s", msg));
+                log.info("server receive msg: [{}] ", msg);
                 RpcRequest rpcRequest = (RpcRequest) msg;
                 // 执行目标方法，并返回结果
                 Object result = rpcRequestHandler.handle(rpcRequest);
                 log.info(String.format("server get result: %s", result.toString()));
-                // 返回方法执行结果给客户端
-                ChannelFuture f = null;
-                if (result instanceof RpcResponse) {
-                    f = ctx.writeAndFlush(result);
+                if (ctx.channel().isActive() && ctx.channel().isWritable()) {
+                    // 返回方法执行结果给客户端
+                    if (result instanceof RpcResponse) {
+                        ctx.writeAndFlush(result);
+                    } else {
+                        ctx.writeAndFlush(RpcResponse.success(result, rpcRequest.getRequestId()));
+                    }
                 } else {
-                    f =ctx.writeAndFlush(RpcResponse.success(result, rpcRequest.getRequestId()));
+                    log.error("not writable now, message dropped");
                 }
-                f.addListener(ChannelFutureListener.CLOSE);
             } finally {
                 // 确保 ByteBuf 被释放，不然可能会有内存泄露问题
                 ReferenceCountUtil.release(msg);

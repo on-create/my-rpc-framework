@@ -45,16 +45,12 @@ public final class NettyClient {
                 });
     }
 
-    private NettyClient() {
-
-    }
-
     public static void close() {
         log.info("call close method");
         eventLoopGroup.shutdownGracefully();
     }
 
-    public static Bootstrap initializeBootstrap() {
+    public static Bootstrap getBootstrap() {
         return b;
     }
 }

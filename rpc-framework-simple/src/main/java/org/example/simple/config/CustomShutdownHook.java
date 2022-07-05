@@ -22,6 +22,7 @@ public class CustomShutdownHook {
 
     public void clearAll() {
         log.info("addShutdownHook for clearAll");
+        // Runtime.getRuntime.addShutdownHook: 在JVM销毁前执行的一个线程，可以在这个最后执行的线程中把线程池优雅的关闭
         Runtime.getRuntime()
                 .addShutdownHook(new Thread(() -> {
             CuratorUtils.clearRegistry();
